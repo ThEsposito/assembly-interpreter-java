@@ -88,6 +88,7 @@ public class LinkedList<T> {
         if(isEmpty()) throw new EmptyListException();
 
         head = head.getNext(); // Still works if head.getNext is null
+        size--;
     }
 
     public void removeLast() {
@@ -99,6 +100,7 @@ public class LinkedList<T> {
             aux = aux.getNext();
         }
         aux.setNext(null);
+        size--;
     }
 
     public void remove(T e){
