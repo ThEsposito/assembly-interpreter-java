@@ -82,4 +82,63 @@ public class LinkedList<T> {
             size++;
         }
     }
+
+    // TODO: Realmente necessário lançar exceção aqui?
+    public void removeFirst() {
+        if(isEmpty()) throw new EmptyListException();
+
+        head = head.getNext(); // Still works if head.getNext is null
+    }
+
+    public void removeLast() {
+        if(isEmpty()) throw new EmptyListException();
+
+        Node<T> aux = head;
+
+        while(aux.getNext().getNext() != null) {
+            aux = aux.getNext();
+        }
+        aux.setNext(null);
+    }
+
+    public void remove(T e){
+        if(isEmpty()) throw new EmptyListException();
+        Node<T> aux = head;
+        Node<T> previous = null;
+
+        while(aux != null && !aux.getData().equals(e)){
+            previous = aux;
+            aux = aux.getNext();
+        }
+        if(aux == null) return; // Not found
+
+        if(head == aux) {
+            head = head.getNext();
+        } else {
+            previous.setNext(aux.getNext());
+        }
+        size--;
+    }
+
+    public void removeAt(int idx){
+        if(isEmpty()) throw new EmptyListException();
+        if(idx < 0 || idx >= size) throw new IndexOutOfBoundsException();
+
+        if(idx == 0) removeFirst();
+        else if (idx == size-1) removeLast();
+        else {
+            Node<T> aux = head;
+            for(int i=0; i<idx-1; i++){
+                aux = aux.getNext();
+            }
+            // TODO: test! Essa parte pode causar erro, caso aux seja o penúltimo
+            aux.setNext(aux.getNext().getNext());
+            size--;
+        }
+    }
+
+    public void clear() {
+        head = null;
+        size = 0;
+    }
 }
