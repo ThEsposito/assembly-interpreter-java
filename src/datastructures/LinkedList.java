@@ -143,4 +143,50 @@ public class LinkedList<T> {
         head = null;
         size = 0;
     }
+
+    public int indexOf(T e){
+        if(isEmpty()) throw new EmptyListException();
+
+        Node<T> aux = head;
+
+        int count = 0;
+        while(aux != null) {
+            if(aux.getData().equals(e)) return count;
+
+            aux = aux.getNext();
+            count++;
+        }
+
+        return -1; // not found
+    }
+
+    public Node<T> search(T e){
+        if(isEmpty()) throw new EmptyListException();
+
+        Node<T> aux = head;
+
+        while(aux != null) {
+            if(aux.getData().equals(e)) return aux;
+            aux = aux.getNext();
+        }
+
+        return null; // Not found
+    }
+
+    public String toString(){
+        if (isEmpty()) return "{}";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append('{');
+
+        Node<T> aux = head;
+        while(aux.getNext() != null){
+            sb.append(aux.getData());
+            sb.append(", ");
+        }
+        sb.append(aux.getData());
+        sb.append('}');
+
+        return sb.toString();
+    }
 }
