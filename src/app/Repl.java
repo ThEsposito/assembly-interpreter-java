@@ -8,7 +8,10 @@ public class Repl {
 
     }
 
-    public static String list(LinkedList<String> soureCode){}
+    public static String list(LinkedList<String> soureCode){
+
+
+    }
 
     public static void run(LinkedList<String> soureCode){}
 
