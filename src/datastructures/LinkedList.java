@@ -1,6 +1,6 @@
 package datastructures;
 
-import exceptions.EmptyListException;
+import java.util.NoSuchElementException;
 
 public class LinkedList<T> {
     private Node<T> head;
@@ -12,7 +12,7 @@ public class LinkedList<T> {
     }
 
     public boolean isEmpty() {
-        return size == 0; // could be: head == null
+        return size == 0; // also could be: head == null
     }
 
     public int getSize() {
@@ -20,12 +20,12 @@ public class LinkedList<T> {
     }
 
     public Node<T> getFirst() {
-        if(isEmpty()) throw new EmptyListException();
+        if(isEmpty()) throw new NoSuchElementException();
         return this.head;
     }
 
     public Node<T> getLast() {
-        if(isEmpty()) throw new EmptyListException();
+        if(isEmpty()) throw new NoSuchElementException();
 
         Node<T> aux = head;
 
@@ -36,8 +36,8 @@ public class LinkedList<T> {
     }
     // TODO: test
     public Node<T> get(int idx){
-        if(isEmpty()) throw new EmptyListException();
-        if(idx < 0 || idx >= size) throw new IndexOutOfBoundsException();
+        if(isEmpty()) throw new NoSuchElementException();
+        if(idx < 0 || idx >= size) throw new IndexOutOfBoundsException("Index "+idx+" out of bounds for length "+size);
 
         Node<T> aux = head;
         for(int i=0; i<idx; i++){
@@ -67,7 +67,7 @@ public class LinkedList<T> {
 
     // TODO: test
     public void insert(T e, int idx){
-        if(idx < 0 || idx > size) throw new IndexOutOfBoundsException();
+        if(idx < 0 || idx > size) throw new IndexOutOfBoundsException("Index "+idx+" out of bounds for length "+size);
 
         if(idx == size) addLast(e);
         else if(idx == 0) addFirst(e);
@@ -83,16 +83,36 @@ public class LinkedList<T> {
         }
     }
 
+    public void set(int idx, T e){
+        if(isEmpty()) throw new NoSuchElementException();
+        if(idx < 0 || idx > size) throw new IndexOutOfBoundsException("Index "+idx+" out of bounds for length "+size);
+
+        if(idx == 0) head.setData(e);
+        else if(idx == size) this.addLast(e);
+        else {
+            Node<T> aux = head;
+            for(int i=0; i<size; i++){
+                aux = aux.getNext();
+            }
+            aux.setData(e);
+        }
+    }
+
     // TODO: Realmente necessário lançar exceção aqui?
     public void removeFirst() {
-        if(isEmpty()) throw new EmptyListException();
+        if(isEmpty()) throw new NoSuchElementException();
 
         head = head.getNext(); // Still works if head.getNext is null
         size--;
     }
 
     public void removeLast() {
-        if(isEmpty()) throw new EmptyListException();
+        if(isEmpty()) throw new NoSuchElementException();
+        if(size == 1){
+            head = null;
+            size--;
+            return;
+        }
 
         Node<T> aux = head;
 
@@ -104,7 +124,7 @@ public class LinkedList<T> {
     }
 
     public void remove(T e){
-        if(isEmpty()) throw new EmptyListException();
+        if(isEmpty()) throw new NoSuchElementException();
         Node<T> aux = head;
         Node<T> previous = null;
 
@@ -123,8 +143,8 @@ public class LinkedList<T> {
     }
 
     public void removeAt(int idx){
-        if(isEmpty()) throw new EmptyListException();
-        if(idx < 0 || idx >= size) throw new IndexOutOfBoundsException();
+        if(isEmpty()) throw new NoSuchElementException();
+        if(idx < 0 || idx >= size) throw new IndexOutOfBoundsException("Index "+idx+" out of bounds for length "+size);
 
         if(idx == 0) removeFirst();
         else if (idx == size-1) removeLast();
@@ -140,12 +160,26 @@ public class LinkedList<T> {
     }
 
     public void clear() {
-        head = null;
+        if(isEmpty()) return;
+
+        Node<T> aux = head;
+        Node<T> newReference;
+
+        while(aux != null){
+            newReference = aux;
+
+            aux = aux.getNext();
+            newReference.setNext(null);
+            newReference.setData(null);
+            newReference = null;
+        }
+        System.out.println(head);
+//        head = null; // precisa dessa linha?
         size = 0;
     }
 
     public int indexOf(T e){
-        if(isEmpty()) throw new EmptyListException();
+        if(isEmpty()) throw new NoSuchElementException();
 
         Node<T> aux = head;
 
@@ -161,7 +195,7 @@ public class LinkedList<T> {
     }
 
     public Node<T> search(T e){
-        if(isEmpty()) throw new EmptyListException();
+        if(isEmpty()) throw new NoSuchElementException();
 
         Node<T> aux = head;
 
@@ -174,17 +208,18 @@ public class LinkedList<T> {
     }
 
     public String toString(){
-        if (isEmpty()) return "{}";
+        if(isEmpty()) return "{}";
 
-        StringBuilder sb = new StringBuilder();
-        sb.append('{');
-
+        StringBuilder sb = new StringBuilder("{");
         Node<T> aux = head;
+
         while(aux.getNext() != null){
-            sb.append(aux.getData());
+            sb.append(aux.getData().toString());
             sb.append(", ");
+            aux = aux.getNext();
         }
-        sb.append(aux.getData());
+
+        sb.append(aux.getData().toString());
         sb.append('}');
 
         return sb.toString();
