@@ -15,7 +15,7 @@ public class Registers {
         values = new Double[26];
     }
 
-    public void atribuir(char var, double valor) throws IllegalArgumentException {
+    public void attribute(char var, double valor) throws IllegalArgumentException {
         int idx = this.getIndex(var);
 
         this.values[idx] = valor;
@@ -42,9 +42,8 @@ public class Registers {
         values = new Double[26];
     }
 
-    // Instrução VARS da nossa calculadora
-    public String listar(){
-        if(this.isEmpty()) return "Nenhuma variável foi atribuída.";
+    public String list(){
+        if(this.isEmpty()) return "Nenhum registrador foi atribuído.";
         char[] alfabeto = {'A','B','C','D','E','F','G','H','I','J','K','L',
                 'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 
