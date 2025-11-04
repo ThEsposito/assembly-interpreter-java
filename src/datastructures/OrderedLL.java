@@ -8,4 +8,19 @@ public class OrderedLL<T extends Comparable<T>> {
         head = tail = null;
         size = 0;
     }
+
+    // CONFERE SE A LISTA ESTA VAZIA
+    public boolean isEmpty(){
+        return head == null;
+    }
+
+    // RETORNA O TAMANHO DA LISTA
+    public int getSize(){
+        return size;
+    }
+
+    public Node<T> getHead() {
+        return head;
+    }
+
 }
