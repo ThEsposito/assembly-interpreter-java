@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class Repl {
     private Registers regs;
-    OrderedLL<Instruction> instructions;
+    private OrderedLL<Instruction> instructions;
 
     // Carrega o arquivo, transforma cada linha (de String pra Instruction) e seta
     // o atributo instructions (com as instrucoes carregadas)
@@ -21,13 +21,14 @@ public class Repl {
     }
 
     // Roda. Exceção se a lista estiver vazia.
-    public void run(OrderedLL<Instruction> sourceCode) throws Exception {
+    public void run() throws Exception {
 
 
     }
 
     // CUIDADO AO INSERIR NUMERO DE LINHA QUE JA EXISTE!!!!
     // VOCE VAI ESQUECER DE MUDAR O ATRIBUTO LINENUMBER, FICANDO COM DOIS ELEMENTOS NA MESMA LINHA!
+    // ACREDITO QUE ISSO DEVA SER IMPLEMENTADO NA CLASSE DA LINKEDLIST!!
     public void insert(Instruction instruction, int line) throws IllegalArgumentException {
 
     }
@@ -43,4 +44,14 @@ public class Repl {
 
     // Mesma coisa, mas especifica o path (que inclui o nome do arquivo)
     public void save(String path){}
+
+    public Registers getRegs() {
+        return this.regs;
+        // Talvez possa ser útil retornar uma cópia, já que ao retornar um array
+        // podemos alterá-lo de fora (pois arrays são ponteiros)
+    }
+
+    public boolean containsLine(int lineNumber){
+        return false;
+    }
 }
