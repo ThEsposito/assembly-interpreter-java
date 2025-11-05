@@ -4,6 +4,7 @@ package datastructures;
 public class OrderedLL<T extends Comparable<T>> {
     private Node<T> head, tail;
     private int size;
+    private Node<T> pWalks; //node?
 
     public OrderedLL(){
         head = tail = null;
@@ -30,5 +31,13 @@ public class OrderedLL<T extends Comparable<T>> {
         return tail;
     }
 
-
+    // INSERE ELEMENTO EM ORDEM CRESCENTE
+    public void insert(T element){ //pode chamar element de linha, instrucao sla?
+	pWalks = head;
+    	while(!(element <= pWalks.getNext())){ // anda enquanto não chegar na posição correta (ordem crescente)
+		pWalks = pWalks.getNext(); //pWalks walks
+	}
+	// resto
+        size+=1; //atualiza o tamanho
+    }
 }
