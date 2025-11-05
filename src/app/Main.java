@@ -1,0 +1,62 @@
+package app;
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        String[] command ;
+        Repl repl = new Repl();
+        Scanner sc = new Scanner(System.in);
+
+        int lineNumber; // Alguns comandos vão usar. Acho melhor do que precisar reinicializar a variavel
+        do {
+            command = sc.nextLine().trim().replaceAll("\\s+", "").toUpperCase()
+                    .split(" ");
+
+            // Dava pra ir fazendo um monte de if (em cada case) pra conferir o tamanho do array!
+            // Se houver excesso de parâmetros, a gente pode printar isso na tela.
+            try {
+                switch (command[0]) {
+                    case "LOAD":
+                        repl.load(command[1]);
+                        break;
+                    case "LIST":
+                        repl.list();
+                        break;
+                    case "RUN":
+                        repl.run();
+                        break;
+                    case "INS":
+                        lineNumber = Integer.parseInt(command[1]);
+
+                        // *lógica pra parsear (converter) a instrução*
+                        Instruction instruction = new Instruction();
+                        repl.insert(instruction, lineNumber);
+                        break;
+                    case "DEL":
+                        if(command.length == 2){
+
+                        } else if(command.length == 3){
+
+                        } else {
+                            System.out.println("Too much arguments!");
+                        }
+                        break;
+                    case "SAVE":
+
+
+                        break;
+                    case "EXIT":
+                        break;
+                    default:
+                        System.out.println("Comando inválido");
+                }
+            } catch(NumberFormatException nfe){
+                System.out.println("Invalid operator! Argument must be int.");
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+
+        } while (!command[0].equals("EXIT"));
+    }
+}

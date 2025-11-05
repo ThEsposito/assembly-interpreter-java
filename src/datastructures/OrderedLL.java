@@ -1,5 +1,6 @@
 package datastructures;
 
+// OBS: não devem ser permitidas linhas com número de linha igual
 public class OrderedLL<T extends Comparable<T>> {
     private Node<T> head, tail;
     private int size;
