@@ -19,8 +19,15 @@ public class OrderedLL<T extends Comparable<T>> {
         return size;
     }
 
+    // RETORNA O INICIO DA LISTA
     public Node<T> getHead() {
         return head;
     }
+
+    // RETORNA O TAIL DA LISTA
+    public Node<T> getTail() {
+        return tail;
+    }
+
 
 }
