@@ -31,13 +31,32 @@ public class OrderedLL<T extends Comparable<T>> {
         return tail;
     }
 
-    // INSERE ELEMENTO EM ORDEM CRESCENTE
+    // INSERE ELEMENTO EM ORDEM CRESCENTE (PRONTO??)
     public void insert(T element){ //pode chamar element de linha, instrucao sla?
-	pWalks = head;
-    	while(!(element <= pWalks.getNext())){ // anda enquanto não chegar na posição correta (ordem crescente)
-		pWalks = pWalks.getNext(); //pWalks walks
-	}
-	// resto
+        Node<T> novo = new Node<>(element); // encapsulando o elemento para tratar como node 
+        pWalks = this.head; // inicia o pWalks no segundo node
+        Node<T> anterior = null;
+
+        if(head == null){ // caso a lista esteja vazia ja incia com o novo elemento
+            head = tail = novo;
+            size++;
+            return;
+        }
+
+    	if(novo.getData().compareTo(head.getData()) < 0){ // se for menor que o primeiro node
+             novo.setNext(this.head);
+             this.head = novo; // atualiza o head
+	    }
+        
+        // anda enquanto não chegar na posição correta (ordem crescente)
+        while(pWalks.getNext() != null && novo.getData().compareTo(pWalks.getData()) > 0){ 
+            anterior = pWalks; // avanca o anterior
+            pWalks = pWalks.getNext(); //pWalks walks - fica uma "casa" a frente do anterior
+        }
+
+        novo.setNext(pWalks);
+        anterior.setNext(novo);
+
         size+=1; //atualiza o tamanho
     }
 }
