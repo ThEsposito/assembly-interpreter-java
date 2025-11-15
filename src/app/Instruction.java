@@ -7,5 +7,5 @@ public class Instruction implements Comparable<Instruction> {
         return Integer.compare(lineNumber, other.lineNumber);
     }
 
-    public Instruction parseInstruction(){}
+    public Instruction parseInstruction(String s){}
 }

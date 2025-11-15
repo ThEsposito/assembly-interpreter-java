@@ -1,22 +1,37 @@
 package app;
 
 import datastructures.OrderedLL;
+
+import java.io.File;
 import java.io.IOException;
 
 public class Repl {
-    private Registers regs;
+    private final Registers regs;
     private OrderedLL<Instruction> instructions;
+    private File file;
+
+    // E o construtor?? Já coloco um que receba o path e abre o arquivo?
+    public Repl(String filePath) throws IOException {
+        regs = new Registers();
+        load(filePath); // Já instancia o File e a lista de instruções
+    }
+
+    public boolean isFileOpen() {
+        return this.file != null;
+    }
 
     // Carrega o arquivo, transforma cada linha (de String pra Instruction) e seta
     // o atributo instructions (com as instrucoes carregadas)
     // IOException é uma exceção que vai ser lançada caso a gente não consiga ler/abrir o arquivo;
     public void load(String path) throws IOException {
-
+        if(isFileOpen()) {
+            regs.clear();
+        }
     }
 
     // Lança a Exceção se não houver instrução (instructions.isEmpty())
     public void list() throws Exception {
-
+        if(instructions == null || instructions.isEmpty()) throw new Exception("Empty Code!");
 
     }
 
@@ -53,5 +68,10 @@ public class Repl {
 
     public boolean containsLine(int lineNumber){
         return false;
+    }
+
+    public String getFileName() {
+        if(file != null) return file.getName();
+        return null; // Achar uma exceção para lançar aqui, ao invés de retornar nulo
     }
 }

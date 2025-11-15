@@ -4,11 +4,11 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        String[] command ;
+        String[] command;
         Repl repl = new Repl();
         Scanner sc = new Scanner(System.in);
 
-        int lineNumber; // Alguns comandos vão usar. Acho melhor do que precisar reinicializar a variavel
+        int lineNumber; // Alguns comandos vão usar. Acho melhor do que precisar reinicializar a variavel toda vez
         do {
             command = sc.nextLine().trim().replaceAll("\\s+", "").toUpperCase()
                     .split(" ");
@@ -18,9 +18,19 @@ public class Main {
             try {
                 switch (command[0]) {
                     case "LOAD":
+
+                        // ainda precisa conferir se existem modificações não salvas na memória
+                        if(repl.isFileOpen()) {
+                            System.out.println("File '"+repl.getFileName()+"' is open!\n Do you want to save before exit?");
+                            String answer = sc.nextLine().trim().toUpperCase();
+                            if(answer.startsWith("Y")) {
+                                repl.save();
+                            }
+                        }
                         repl.load(command[1]);
                         break;
                     case "LIST":
+
                         repl.list();
                         break;
                     case "RUN":
@@ -49,7 +59,7 @@ public class Main {
                     case "EXIT":
                         break;
                     default:
-                        System.out.println("Comando inválido");
+                        System.out.println("Invalid Command!");
                 }
             } catch(NumberFormatException nfe){
                 System.out.println("Invalid operator! Argument must be int.");
