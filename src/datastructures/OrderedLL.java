@@ -129,4 +129,24 @@ public class OrderedLL<T extends Comparable<T>> {
             head = end.getNext(); // se o primeiro nó removido era o head
         }
     }
+
+    //----------------------------------------------------------------------------------------------------------------------------------
+
+    public Node<T> search(T element){
+        Node<T> current = this.getHead();
+
+        while(current != null){
+            if(current.getData().compareTo(element) != 0){ // se nao achar o elemento
+                current = current.getNext();
+            }else{ // se achar
+                return current;
+            }
+        }
+
+        return null;
+    }
+
+    //----------------------------------------------------------------------------------------------------------------------------------
+
+    
 }
