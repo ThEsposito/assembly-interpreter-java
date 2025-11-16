@@ -11,8 +11,8 @@ public class Main {
 
         int lineNumber; // Alguns comandos vão usar. Acho melhor do que precisar reinicializar a variavel toda vez
         do {
-            command = sc.nextLine().trim().replaceAll("\\s+", "").toUpperCase()
-                    .split(" ");
+            String line = sc.nextLine().trim().replaceAll("\\s+", "").toUpperCase();
+            command = line.split(" ");
 
             // Dava pra ir fazendo um monte de if (em cada case) pra conferir o tamanho do array!
             // Se houver excesso de parâmetros, a gente pode printar isso na tela.
@@ -27,7 +27,7 @@ public class Main {
                             continue;
                         }
                         if(repl.isFileOpen() && repl.hasUnsavedChanges()) {
-                            System.out.println("File '"+repl.getFileName()+"' is open!\n Do you want to save before exit?");
+                            System.out.println("File '"+repl.getFileName()+"' is open!\n Do you want to save before exit? [Y/n]\n> ");
                             String answer = sc.nextLine().trim().toUpperCase();
                             if(answer.startsWith("Y")) {
                                 repl.save();
@@ -61,14 +61,11 @@ public class Main {
                         }// Tratar cada erro individualmente aqui! Registrador indefinido, por exemplo.
                         break;
                     case "INS":
-                        lineNumber = Integer.parseInt(command[1]);
-
-                        // *lógica pra parsear (converter) a instrução*
-                        Instruction instruction = new Instruction();
-                        if(repl.containsLine(lineNumber));
-                        repl.insert(instruction, lineNumber);
+                        // O método já cuida das linhas duplicadas
+                        repl.insert(line);
                         break;
                     case "DEL":
+                        // Validar linha negativa!!!!
                         if(command.length == 2){
 
                         } else if(command.length == 3){
@@ -78,8 +75,10 @@ public class Main {
                         }
                         break;
                     case "SAVE":
-
-
+                        if(command.length == 1) repl.save();
+                        else {
+                            repl.save(command[1]);
+                        }
                         break;
                     case "EXIT":
                         break;
