@@ -1,8 +1,7 @@
 package app;
 
+import java.io.IOException;
 import java.util.Scanner;
-
-import datastructures.OrderedLL;
 
 public class Main {
     public static void main(String[] args) {
@@ -20,29 +19,53 @@ public class Main {
             try {
                 switch (command[0]) {
                     case "LOAD":
-
-                        // ainda precisa conferir se existem modificações não salvas na memória
-                        if(repl.isFileOpen()) {
+                        if(command.length < 2){
+                            System.out.println("Too few arguments!");
+                            continue;
+                        } else if(command.length > 2){
+                            System.out.println("Too many arguments!");
+                            continue;
+                        }
+                        if(repl.isFileOpen() && repl.hasUnsavedChanges()) {
                             System.out.println("File '"+repl.getFileName()+"' is open!\n Do you want to save before exit?");
                             String answer = sc.nextLine().trim().toUpperCase();
                             if(answer.startsWith("Y")) {
                                 repl.save();
                             }
                         }
-                        repl.load(command[1]);
+                        try {
+                            repl.load(command[1]);
+                        } catch(IOException ioe){
+                            System.out.println("An error occurred while opening the file: "+ioe.getMessage());
+                        }
                         break;
                     case "LIST":
+                        if(command.length > 1){
+                            System.out.println("Too many arguments!");
+                            continue;
+                        }
 
-                        repl.list();
+                        // Verificar arquivo vazio??
+                        if(!repl.isFileOpen()){
+                            System.out.println("There's no file open! Type 'LOAD' to select one."); // Meu inglês é básico
+                        } else {
+                            repl.list();
+                        }
+
                         break;
                     case "RUN":
-                        repl.run();
+                        try {
+                            repl.run();
+                        } catch(Exception e){
+                            System.out.println(e.getMessage());
+                        }// Tratar cada erro individualmente aqui! Registrador indefinido, por exemplo.
                         break;
                     case "INS":
                         lineNumber = Integer.parseInt(command[1]);
 
                         // *lógica pra parsear (converter) a instrução*
                         Instruction instruction = new Instruction();
+                        if(repl.containsLine(lineNumber));
                         repl.insert(instruction, lineNumber);
                         break;
                     case "DEL":
