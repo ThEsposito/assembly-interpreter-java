@@ -96,7 +96,7 @@ public class OrderedLL<T extends Comparable<T>> {
         Node<T> start = null; // achar o elemento de start
         Node<T> end = null; // achar o elemento de end
 
-        while(current != null && start == null){ //  X -> C -> V -> T -> G
+        while(current != null && start == null){
             if(current.getData().equals(elem1)){
                 start = current;
             }else{
@@ -148,5 +148,64 @@ public class OrderedLL<T extends Comparable<T>> {
 
     //----------------------------------------------------------------------------------------------------------------------------------
 
+    public void printAll(){
+        Node<T> current = this.getHead();
+        int pageSize = 20; // numero de linhas por pagina
+        int pageCont = 0; // contador para as linhas ja impressas
+
+        if(current == null){ // edge case
+            System.out.println("Lista Vazia!");
+            return;
+        }
+
+        while(current != null){
+            System.out.println(current.getData().toString());
+            pageCont++;
+            current = current.getNext();
+
+            if(pageCont == pageSize){
+                System.out.println("Pressione ENTER para continuar ou S para sair)");
+                try{
+                    char c = (char) System.in.read();
+                    if(c == 'S' || c == 's'){ // sai do loop
+                        break;
+                    }
+                    pageCont = 0; // reseta o contador de linhas
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            } // volta para o comeco do while
+        }
+        if(pageCont > 0){
+            System.out.println("...");
+        }
+        return;
+    }
+
+    //----------------------------------------------------------------------------------------------------------------------------------
+
+    public void clear(){ // autoexplicativo
+        head = tail = null;
+        size = 0;
+    }
+
+    //----------------------------------------------------------------------------------------------------------------------------------
+
+    public boolean contains(T element){ // verifica se a linha existe
+        Node<T> current = this.getHead();
+
+        while(current != null){
+            if(current.getData().compareTo(element) != 0){ // se nao achar o elemento
+                current = current.getNext();
+            }else{ // se achar
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+} // fim da classe*
     
-}
+
