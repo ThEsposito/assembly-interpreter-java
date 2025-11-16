@@ -41,7 +41,6 @@ public class Repl {
         File newFile = new File(path);
         if(!newFile.exists()) throw new FileNotFoundException("File "+newFile.getPath()+" not found!");
 
-        this.hasUnsavedChanges = false;
         this.file = newFile;
         instructions.clear();
 
@@ -52,6 +51,7 @@ public class Repl {
             instructions.insert(inst);
         }
         fileScanner.close();
+        this.hasUnsavedChanges = false;
     }
 
     // Lança a Exceção se não houver instrução (instructions.isEmpty())
@@ -101,6 +101,7 @@ public class Repl {
         if(removeIdx == -1) return false;
 
         instructions.removeAt(removeIdx);
+        hasUnsavedChanges = true;
         return true;
     }
 
@@ -118,11 +119,11 @@ public class Repl {
         }
 
         instructions.removeRange(startIdx, endIdx);
+        hasUnsavedChanges = true;
     }
 
     public void save() throws IOException{
         save(this.file.getAbsolutePath());
-        this.hasUnsavedChanges = false;
     }
 
     // Mesma coisa, mas especifica o path (que inclui o nome do arquivo)
@@ -148,6 +149,8 @@ public class Repl {
         for(int i=0; i<instructions.getSize(); i++){
             writer.println(instructions.get(i).getRawLine());
         }
+
+        this.hasUnsavedChanges = false;
         writer.close();
     }
 
