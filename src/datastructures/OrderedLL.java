@@ -31,8 +31,17 @@ public class OrderedLL<T extends Comparable<T>> {
         return tail;
     }
 
+    public T get(int idx) throws IndexOutOfBoundsException{
+        if(idx<0 || idx >= size) throw new IndexOutOfBoundsException("Index "+idx+" out of bounds for length "+size);
+        Node<T> current = head;
+
+        for(int i=0; i<idx; i++) current = current.getNext();
+
+        return current.getData();
+    }
+
     // INSERE ELEMENTO EM ORDEM CRESCENTE (PRONTO??)
-    public void insert(T element){ //pode chamar element de linha, instrucao sla?
+    public void insert(T element){ //pode chamar element de linha, instrucao sla? Melhor não, deixar o mais genérico possível
         Node<T> novo = new Node<>(element); // encapsulando o elemento para tratar como node 
         pWalks = this.head; // inicia o pWalks no segundo node
         Node<T> anterior = null;
