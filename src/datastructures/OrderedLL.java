@@ -31,8 +31,17 @@ public class OrderedLL<T extends Comparable<T>> {
         return tail;
     }
 
+    public T get(int idx) throws IndexOutOfBoundsException{
+        if(idx<0 || idx >= size) throw new IndexOutOfBoundsException("Index "+idx+" out of bounds for length "+size);
+        Node<T> current = head;
+
+        for(int i=0; i<idx; i++) current = current.getNext();
+
+        return current.getData();
+    }
+
     // INSERE ELEMENTO EM ORDEM CRESCENTE (PRONTO??)
-    public void insert(T element){ //pode chamar element de linha, instrucao sla?
+    public void insert(T element){ //pode chamar element de linha, instrucao sla? Melhor não, deixar o mais genérico possível
         Node<T> novo = new Node<>(element); // encapsulando o elemento para tratar como node 
         pWalks = this.head; // inicia o pWalks no segundo node
         Node<T> anterior = null;
@@ -89,6 +98,59 @@ public class OrderedLL<T extends Comparable<T>> {
 
 //----------------------------------------------------------------------------------------------------------------------------------
 
+    public void removeAt(int idx) throws IndexOutOfBoundsException {
+        if(idx<0 || idx>=size) throw new IndexOutOfBoundsException("Index "+idx+" out of bounds for length "+size);
+    }
+
+//----------------------------------------------------------------------------------------------------------------------------------
+
+    public void removeRange(int start, int end) {
+        if (isEmpty()) return;
+        if (start < 0 || start >= size) throw new IndexOutOfBoundsException("Index " + start + " out of bounds for length " + size);
+
+        if (end < 0 || end >= size) throw new IndexOutOfBoundsException("Index " + end + " out of bounds for length " + size);
+
+        if (start > end) throw new IllegalArgumentException("Start index (" + start + ") must be <= end index (" + end + ").");
+
+        if (start == 0) {
+            Node<T> current = head;
+
+            for (int i = 0; i < end; i++) {
+                current = current.getNext();
+            }
+
+            head = current.getNext();
+
+            if (head == null) {
+                tail = null;
+            }
+
+            size -= (end - start + 1);
+            return;
+        }
+
+        Node<T> beforeStart = head;
+        for (int i = 0; i < start - 1; i++) {
+            beforeStart = beforeStart.getNext();
+        }
+
+        Node<T> endNode = beforeStart.getNext();
+        for (int i = start; i < end; i++) {
+            endNode = endNode.getNext();
+        }
+
+        Node<T> afterEnd = endNode.getNext();
+        beforeStart.setNext(afterEnd);
+
+        if (afterEnd == null) {
+            tail = beforeStart;
+        }
+
+        size -= (end - start + 1);
+    }
+
+
+    // Era pra ser por índice ksksksksksksksks
     public void removeRange(T elem1, T elem2){ // CONFERIR SE ESTA CERTO
         if(head == null) return; // lista vazia
 
@@ -207,5 +269,3 @@ public class OrderedLL<T extends Comparable<T>> {
 
 
 } // fim da classe*
-    
-

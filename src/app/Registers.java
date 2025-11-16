@@ -20,6 +20,10 @@ public class Registers {
 
         this.values[idx] = valor;
     }
+
+    public void clear(){
+        values = new Double[26];
+    }
     
     public double getValor(char var) throws IllegalArgumentException, UndefinedRegisterException {
         int idx = this.getIndex(var);

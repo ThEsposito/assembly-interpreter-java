@@ -1,41 +1,71 @@
 package app;
 
+import java.io.IOException;
 import java.util.Scanner;
-
-import datastructures.OrderedLL;
 
 public class Main {
     public static void main(String[] args) {
-        String[] command ;
+        String[] command;
         Repl repl = new Repl();
         Scanner sc = new Scanner(System.in);
 
-        int lineNumber; // Alguns comandos vão usar. Acho melhor do que precisar reinicializar a variavel
+        int lineNumber; // Alguns comandos vão usar. Acho melhor do que precisar reinicializar a variavel toda vez
         do {
-            command = sc.nextLine().trim().replaceAll("\\s+", "").toUpperCase()
-                    .split(" ");
+            String line = sc.nextLine().trim().replaceAll("\\s+", "").toUpperCase();
+            command = line.split(" ");
 
             // Dava pra ir fazendo um monte de if (em cada case) pra conferir o tamanho do array!
             // Se houver excesso de parâmetros, a gente pode printar isso na tela.
             try {
                 switch (command[0]) {
                     case "LOAD":
-                        repl.load(command[1]);
+                        if(command.length < 2){
+                            System.out.println("Too few arguments!");
+                            continue;
+                        } else if(command.length > 2){
+                            System.out.println("Too many arguments!");
+                            continue;
+                        }
+                        if(repl.isFileOpen() && repl.hasUnsavedChanges()) {
+                            System.out.println("File '"+repl.getFileName()+"' is open!\n Do you want to save before exit? [Y/n]\n> ");
+                            String answer = sc.nextLine().trim().toUpperCase();
+                            if(answer.startsWith("Y")) {
+                                repl.save();
+                            }
+                        }
+                        try {
+                            repl.load(command[1]);
+                        } catch(IOException ioe){
+                            System.out.println("An error occurred while opening the file: "+ioe.getMessage());
+                        }
                         break;
                     case "LIST":
-                        repl.list();
+                        if(command.length > 1){
+                            System.out.println("Too many arguments!");
+                            continue;
+                        }
+
+                        // Verificar arquivo vazio??
+                        if(!repl.isFileOpen()){
+                            System.out.println("There's no file open! Type 'LOAD' to select one."); // Meu inglês é básico
+                        } else {
+                            repl.list();
+                        }
+
                         break;
                     case "RUN":
-                        repl.run();
+                        try {
+                            repl.run();
+                        } catch(Exception e){
+                            System.out.println(e.getMessage());
+                        }// Tratar cada erro individualmente aqui! Registrador indefinido, por exemplo.
                         break;
                     case "INS":
-                        lineNumber = Integer.parseInt(command[1]);
-
-                        // *lógica pra parsear (converter) a instrução*
-                        Instruction instruction = new Instruction();
-                        repl.insert(instruction, lineNumber);
+                        // O método já cuida das linhas duplicadas
+                        repl.insert(line);
                         break;
                     case "DEL":
+                        // Validar linha negativa!!!!
                         if(command.length == 2){
 
                         } else if(command.length == 3){
@@ -45,13 +75,15 @@ public class Main {
                         }
                         break;
                     case "SAVE":
-
-
+                        if(command.length == 1) repl.save();
+                        else {
+                            repl.save(command[1]);
+                        }
                         break;
                     case "EXIT":
                         break;
                     default:
-                        System.out.println("Comando inválido");
+                        System.out.println("Invalid Command!");
                 }
             } catch(NumberFormatException nfe){
                 System.out.println("Invalid operator! Argument must be int.");
