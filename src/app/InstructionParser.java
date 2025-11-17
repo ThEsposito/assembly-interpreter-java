@@ -15,8 +15,8 @@ public class InstructionParser {
         try {
             lineNumber = Integer.parseInt(parts[0]);
 
-            if (lineNumber < 0) {
-                throw new ParseException("Line number can't be negative: " + parts[0]);
+            if (lineNumber <= 0) {
+                throw new ParseException("Line number must be positive: " + parts[0]);
             }
         } catch (NumberFormatException e) {
             throw new ParseException("Malformed line! Must start with a number: " + rawLine);

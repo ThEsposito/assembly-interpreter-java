@@ -68,11 +68,11 @@ public class Repl {
     // Exceção se a lista estiver vazia.
     // Exceção se a instrução for desconhecida (isso a classe instruction pode lançar)
     // Exceção se não houver arquivo aberto
-    public void run() throws UndefinedRegisterException, IOException {
-        if (instructions.isEmpty()) throw new IOException("Empty file!");
-
-        interpreter.execute(this.instructions); // Tratar exceções?? Ou só delego isso pra main?
-    }
+//    public void run() throws UndefinedRegisterException, IOException {
+//        if (instructions.isEmpty()) throw new IOException("Empty file!");
+//
+//        interpreter.execute(this.instructions); // Tratar exceções?? Ou só delego isso pra main?
+//    }
 
     // CUIDADO AO INSERIR NUMERO DE LINHA QUE JA EXISTE!!!!
     // VOCE VAI ESQUECER DE MUDAR O ATRIBUTO LINENUMBER, FICANDO COM DOIS ELEMENTOS NA MESMA LINHA!
@@ -140,7 +140,7 @@ public class Repl {
             this.hasUnsavedChanges = false;
         }
         File newFile = new File(path);
-        if(newFile.exists()) { // Essa validação deveria ficar aqui? Isso aqui já sobrescreve?
+        if(newFile.exists() && !newFile.getAbsolutePath().equals(file.getAbsolutePath())) { // Essa validação deveria ficar aqui? Isso aqui já sobrescreve?
             System.out.println("This file already exists! Do you want to override it? [Y/n]");
             Scanner sc = new Scanner(System.in);
             String answer = sc.nextLine().toUpperCase();
