@@ -9,20 +9,20 @@ package app;
 import exceptions.UndefinedRegisterException;
 
 public class Registers {
-    private Double[] values;
+    private Integer[] values;
 
     public Registers(){
-        values = new Double[26];
+        values = new Integer[26];
     }
 
-    public void attribute(char var, double valor) throws IllegalArgumentException {
+    public void attribute(char var, int valor) throws IllegalArgumentException {
         int idx = this.getIndex(var);
 
         this.values[idx] = valor;
     }
 
     public void clear(){
-        values = new Double[26];
+        values = new Integer[26];
     }
     
     public double getValor(char var) throws IllegalArgumentException, UndefinedRegisterException {
@@ -43,7 +43,7 @@ public class Registers {
     }
 
     public void reset(){
-        values = new Double[26];
+        values = new Integer[26];
     }
 
     public String list(){
@@ -51,15 +51,15 @@ public class Registers {
         char[] alfabeto = {'A','B','C','D','E','F','G','H','I','J','K','L',
                 'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
 
-        String lista = "";
+        StringBuilder lista = new StringBuilder();
 
         for(int i=0; i<values.length; i++){
-            Double value = values[i];
+            Integer value = values[i];
             if(value != null) {
-                lista += alfabeto[i] + " = " + value + '\n';
+                lista.append(alfabeto[i]).append(" = ").append(value).append('\n');
             }
         }
-        return lista;
+        return lista.toString();
     }
 
     private int getIndex(char var) throws IllegalArgumentException {
@@ -74,7 +74,7 @@ public class Registers {
         return var - 'A';
     }
     private boolean isEmpty(){
-        for(Double v : values){
+        for(Integer v : values){
             if (v != null) return false;
         }
         return true;
