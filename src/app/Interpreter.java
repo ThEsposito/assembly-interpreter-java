@@ -5,5 +5,7 @@ import datastructures.OrderedLL;
 public class Interpreter {
     private Registers regs;
 
-    public void execute(OrderedLL<Instruction> instructions){}
+    public void execute(OrderedLL<Instruction> instructions){
+
+    }
 }

@@ -25,7 +25,7 @@ public class Registers {
         values = new Integer[26];
     }
     
-    public double getValor(char var) throws IllegalArgumentException, UndefinedRegisterException {
+    public int getValor(char var) throws IllegalArgumentException, UndefinedRegisterException {
         int idx = this.getIndex(var);
         if(values[idx] == null) {
             char[] alfabeto = {'A','B','C','D','E','F','G','H','I','J','K','L',

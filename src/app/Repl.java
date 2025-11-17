@@ -17,13 +17,11 @@ public class Repl {
     private boolean hasUnsavedChanges;
     private File file;
 
-    // E o construtor?? Já coloco um que receba o path e abre o arquivo?
     public Repl() {
         hasUnsavedChanges = false;
         file = null;
         interpreter = new Interpreter();
         instructions = new OrderedLL<>();
-//        load(filePath); // Já instancia o File e a lista de instruções?
     }
 
     public boolean hasUnsavedChanges() {
@@ -168,7 +166,7 @@ public class Repl {
     // Poderia reestruturar esse método para retornar o índice de uma vez.
     // Pensando em desempenho e redundância aqui
     public boolean containsLine(int lineNumber){
-        return lineNumberToIdx(lineNumber) != 1;
+        return lineNumberToIdx(lineNumber) != -1;
     }
 
     public boolean isCodeEmpty(){
