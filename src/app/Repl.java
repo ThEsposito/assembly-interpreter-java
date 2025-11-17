@@ -83,12 +83,13 @@ public class Repl {
         Instruction instr = InstructionParser.parse(rawLine);
 
         int idx = lineNumberToIdx(instr.getLineNumber());
-        if(idx != -1){
+        if(idx != -1) {
             instructions.removeAt(idx); // Remove a linha antiga, impedindo a duplicidade de linhas
-            System.out.println("Line "+instr.getLineNumber() + " updated successfully!");
-        } else {
-            System.out.println("Line "+ instr.getLineNumber() + " inserted successfully!");
+//            System.out.println("Line " + instr.getLineNumber() + " updated successfully!");
         }
+//        } else {
+//            System.out.println("Line "+ instr.getLineNumber() + " inserted successfully!");
+//        }
 
         instructions.insert(instr);
         this.hasUnsavedChanges = true;

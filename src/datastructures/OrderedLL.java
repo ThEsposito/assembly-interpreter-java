@@ -4,7 +4,6 @@ package datastructures;
 public class OrderedLL<T extends Comparable<T>> {
     private Node<T> head, tail;
     private int size;
-    private Node<T> pWalks; //node?
 
     public OrderedLL(){
         head = tail = null;
@@ -42,8 +41,8 @@ public class OrderedLL<T extends Comparable<T>> {
 
     // INSERE ELEMENTO EM ORDEM CRESCENTE (PRONTO??)
     public void insert(T element){ //pode chamar element de linha, instrucao sla? Melhor não, deixar o mais genérico possível
-        Node<T> novo = new Node<>(element); // encapsulando o elemento para tratar como node 
-        pWalks = this.head; // inicia o pWalks no segundo node
+        Node<T> novo = new Node<>(element); // encapsulando o elemento para tratar como node
+        Node<T> pWalks = this.head; // inicia o pWalks no segundo node
         Node<T> anterior = null;
 
         if(head == null){ // caso a lista esteja vazia ja incia com o novo elemento
@@ -53,18 +52,23 @@ public class OrderedLL<T extends Comparable<T>> {
         }
 
     	if(novo.getData().compareTo(head.getData()) < 0){ // se for menor que o primeiro node
-             novo.setNext(this.head);
-             this.head = novo; // atualiza o head
+            novo.setNext(this.head);
+            this.head = novo; // atualiza o head
+
+            size++;
+            return;
 	    }
         
         // anda enquanto não chegar na posição correta (ordem crescente)
-        while(pWalks.getNext() != null && novo.getData().compareTo(pWalks.getData()) > 0){ 
+        while(pWalks.getNext() != null && novo.getData().compareTo(pWalks.getData()) > 0){
             anterior = pWalks; // avanca o anterior
             pWalks = pWalks.getNext(); //pWalks walks - fica uma "casa" a frente do anterior
         }
 
-        novo.setNext(pWalks);
         anterior.setNext(novo);
+        novo.setNext(pWalks);
+
+        if(pWalks == null) tail = novo;
 
         size+=1; //atualiza o tamanho
     }
@@ -74,7 +78,7 @@ public class OrderedLL<T extends Comparable<T>> {
             return false;
         }
 
-        pWalks = head;
+        Node<T> pWalks = head;
         Node<T> anterior = null;
 
         while(pWalks != null && pWalks.getData().compareTo(element) != 0){
@@ -100,6 +104,24 @@ public class OrderedLL<T extends Comparable<T>> {
 
     public void removeAt(int idx) throws IndexOutOfBoundsException {
         if(idx<0 || idx>=size) throw new IndexOutOfBoundsException("Index "+idx+" out of bounds for length "+size);
+
+        if(idx == 0){
+            head = head.getNext();
+            size--;
+
+            if(head == null) tail = null;
+
+            return;
+        }
+
+        Node<T> current = head;
+
+        for(int i=0; i<idx-1; i++) current = current.getNext();
+
+        if(current.getNext() == tail) tail = current;
+        current.setNext(current.getNext().getNext());
+
+        size--;
     }
 
 //----------------------------------------------------------------------------------------------------------------------------------
