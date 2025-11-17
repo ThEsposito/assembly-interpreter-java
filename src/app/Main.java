@@ -1,5 +1,9 @@
 package app;
 
+import datastructures.OrderedLL;
+import exceptions.ParseException;
+import jdk.jfr.consumer.RecordedEvent;
+
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -16,81 +20,119 @@ public class Main {
 
             // Dava pra ir fazendo um monte de if (em cada case) pra conferir o tamanho do array!
             // Se houver excesso de parâmetros, a gente pode printar isso na tela.
-            try {
                 switch (command[0]) {
                     case "LOAD":
-                        if(command.length < 2){
-                            System.out.println("Too few arguments!");
-                            continue;
-                        } else if(command.length > 2){
-                            System.out.println("Too many arguments!");
+                        if(command.length != 2) {
+                            System.out.println("Error: Incorrect number of arguments for LOAD!");
                             continue;
                         }
+
                         if(repl.isFileOpen() && repl.hasUnsavedChanges()) {
                             System.out.println("File '"+repl.getFileName()+"' is open!\n Do you want to save before exit? [Y/n]\n> ");
                             String answer = sc.nextLine().trim().toUpperCase();
                             if(answer.startsWith("Y")) {
-                                repl.save();
+                                try {
+                                    repl.save();
+                                } catch (IOException ioe){
+                                    System.out.println("An error occurred while opening the file: "+ioe.getMessage());
+                                }
                             }
                         }
                         try {
                             repl.load(command[1]);
                         } catch(IOException ioe){
                             System.out.println("An error occurred while opening the file: "+ioe.getMessage());
+                        } catch(ParseException pe){
+                            System.out.println("Warning: "+pe.getMessage());
                         }
                         break;
+
                     case "LIST":
                         if(command.length > 1){
-                            System.out.println("Too many arguments!");
+                            System.out.println("Error: No argument is required for LIST!");
                             continue;
                         }
 
-                        // Verificar arquivo vazio??
                         if(!repl.isFileOpen()){
-                            System.out.println("There's no file open! Type 'LOAD' to select one."); // Meu inglês é básico
+                            System.out.println("Error: There's no file open! Type 'LOAD <path>' to select one."); // Meu inglês é básico
+                        } else if(!repl.isCodeEmpty()){
+                            System.out.println("Error: empty source code! There's nothing to list.");
                         } else {
                             repl.list();
                         }
-
                         break;
+
                     case "RUN":
+                        if(command.length > 1) {
+                            System.out.println("Error: No argument is required for RUN!");
+                            continue;
+                        }
+                        if(!repl.isFileOpen()){
+                            System.out.println("Error: There's no file open! Type 'LOAD <path>' to select one."); // Meu inglês é básico
+                            continue;
+                        }
+
+                        if(repl.isCodeEmpty()){
+                            System.out.println("Empty source code! There's nothing to run.");
+                            continue;
+                        }
+
                         try {
-                            repl.run();
+                            repl.run(); // Todas as validações serão feitas pelo interpretador
                         } catch(Exception e){
-                            System.out.println(e.getMessage());
+                            System.out.println("Error: "+e.getMessage());
                         }// Tratar cada erro individualmente aqui! Registrador indefinido, por exemplo.
                         break;
-                    case "INS":
+
+                    case "INS": // DEPOIS EU FAÇO! MUCHO TRAMPO
                         // O método já cuida das linhas duplicadas
-                        repl.insert(line);
+//                        if(command.length )
+//                        repl.insert(line);
                         break;
+
                     case "DEL":
-                        // Validar linha negativa!!!!
-                        if(command.length == 2){
+                        try {
+                            if (command.length == 2) {
+                                int deletionLine = Integer.parseInt(command[1]);
+                                repl.delete(deletionLine);
+                                System.out.println("Line " + line + " removed.");
 
-                        } else if(command.length == 3){
+                            } else if (command.length == 3) {
+                                int start = Integer.parseInt(command[1]);
+                                int end = Integer.parseInt(command[2]);
+                                OrderedLL<Integer> deletions = repl.delete(start, end);
 
-                        } else {
-                            System.out.println("Too much arguments!");
+                                System.out.print("Lines removed: [ ");
+                                for(int i=0; i<deletions.getSize(); i++){
+                                    System.out.print(deletions.get(i) + ' ');
+                                }
+                                System.out.println("]");
+                            } else {
+                                System.out.println("Error: Expected 1 or 2 args for DEL.");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Error: Line must be a number.");
+                        } catch (Exception e) {
+                            System.out.println("Error: " + e.getMessage());
                         }
                         break;
+
                     case "SAVE":
-                        if(command.length == 1) repl.save();
-                        else {
-                            repl.save(command[1]);
+                        try {
+                            if (command.length == 1) repl.save();
+                            else if(command.length == 2) repl.save(command[1]);
+                            else {
+                                System.out.println("Error: Incorrect number of arguments for SAVE");
+                            }
+                        } catch(IOException ioe){
+                            System.out.println("Error: "+ ioe.getMessage());
                         }
                         break;
                     case "EXIT":
                         break;
                     default:
-                        System.out.println("Invalid Command!");
+                        System.out.println("Error: Invalid Command!");
                 }
-            } catch(NumberFormatException nfe){
-                System.out.println("Invalid operator! Argument must be int.");
-            } catch (Exception e){
-                System.out.println(e.getMessage());
-            }
-
         } while (!command[0].equals("EXIT"));
     
     }

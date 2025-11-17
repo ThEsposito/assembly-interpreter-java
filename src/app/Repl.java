@@ -1,8 +1,10 @@
 package app;
 
 import datastructures.OrderedLL;
+import exceptions.ParseException;
 import exceptions.UndefinedRegisterException;
 
+import javax.sound.sampled.Line;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,8 +12,8 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class Repl {
-    private Interpreter interpreter;
-    private OrderedLL<Instruction> instructions;
+    private final Interpreter interpreter;
+    private final OrderedLL<Instruction> instructions;
     private boolean hasUnsavedChanges;
     private File file;
 
@@ -19,6 +21,8 @@ public class Repl {
     public Repl() {
         hasUnsavedChanges = false;
         file = null;
+        interpreter = new Interpreter();
+        instructions = new OrderedLL<>();
 //        load(filePath); // Já instancia o File e a lista de instruções?
     }
 
@@ -37,7 +41,7 @@ public class Repl {
     // Carrega o arquivo, transforma cada linha (de String pra Instruction) e seta
     // o atributo instructions (com as instrucoes carregadas)
     // IOException é uma exceção que vai ser lançada caso a gente não consiga ler/abrir o arquivo;
-    public void load(String path) throws FileNotFoundException, IOException {
+    public void load(String path) throws IOException, ParseException {
         File newFile = new File(path);
         if(!newFile.exists()) throw new FileNotFoundException("File "+newFile.getPath()+" not found!");
 
@@ -54,9 +58,8 @@ public class Repl {
         this.hasUnsavedChanges = false;
     }
 
-    // Lança a Exceção se não houver instrução (instructions.isEmpty())
-    public void list() throws Exception {
-        if(instructions == null || instructions.isEmpty()) throw new Exception("Empty file!");
+    public void list()  {
+        if(instructions.isEmpty()) return;
 
         for(int i=0; i<instructions.getSize(); i++) {
             System.out.println(instructions.get(i).getRawLine());
@@ -76,12 +79,15 @@ public class Repl {
     // CUIDADO AO INSERIR NUMERO DE LINHA QUE JA EXISTE!!!!
     // VOCE VAI ESQUECER DE MUDAR O ATRIBUTO LINENUMBER, FICANDO COM DOIS ELEMENTOS NA MESMA LINHA!
     // ACREDITO QUE ISSO DEVA SER IMPLEMENTADO NA CLASSE DA LINKEDLIST!!
-    public void insert(String rawLine) throws IllegalArgumentException {
+    public void insert(String rawLine) throws ParseException {
         Instruction instr = InstructionParser.parse(rawLine);
 
         int idx = lineNumberToIdx(instr.getLineNumber());
         if(idx != -1){
-            instructions.removeAt(idx);
+            instructions.removeAt(idx); // Remove a linha antiga, impedindo a duplicidade de linhas
+            System.out.println("Line "+instr.getLineNumber() + " updated successfully!");
+        } else {
+            System.out.println("Line "+ instr.getLineNumber() + " inserted successfully!");
         }
 
         instructions.insert(instr);
@@ -105,21 +111,23 @@ public class Repl {
         return true;
     }
 
-    public void delete(int startLine, int endLine){
+    public OrderedLL<Integer> delete(int startLine, int endLine) throws Exception {
+        if(startLine > endLine) throw new Exception("Invalid range: "+startLine+ " to "+endLine);
+
         int startIdx = lineNumberToIdx(startLine);
         int endIdx = lineNumberToIdx(endLine);
 
-        if(startIdx == -1){
-            System.out.println("Line "+startLine+" not found"); // Exceção, print ou retorno boolean??
-            return;
-        }
-        if(endIdx == -1){
-            System.out.println("Line "+endLine+" not found"); // Exceção, print ou retorno boolean??
-            return;
-        }
+        if(startIdx == -1) throw new Exception("Line "+startLine+" unexists");
+        if(endIdx == -1) throw new Exception("Line "+endLine+" unexists");
 
+        OrderedLL<Integer> LineDeletions = new OrderedLL<>();
+        for(int i=startIdx; i<=endIdx; i++){
+            LineDeletions.insert(instructions.get(i).getLineNumber());
+        }
         instructions.removeRange(startIdx, endIdx);
         hasUnsavedChanges = true;
+
+        return LineDeletions;
     }
 
     public void save() throws IOException{
@@ -133,31 +141,37 @@ public class Repl {
             this.hasUnsavedChanges = false;
         }
         File newFile = new File(path);
-        if(newFile.exists()) { // Essa validação deveria ficar aqui?
+        if(newFile.exists()) { // Essa validação deveria ficar aqui? Isso aqui já sobrescreve?
             System.out.println("This file already exists! Do you want to override it? [Y/n]");
             Scanner sc = new Scanner(System.in);
             String answer = sc.nextLine().toUpperCase();
             sc.close();
 
             if (!answer.startsWith("Y")) {
+                System.out.println("Aborting operation!");
                 return;
             }
-        }
-        // Já sobrescreve aqui??????
-        PrintWriter writer = new PrintWriter(newFile);
-
-        for(int i=0; i<instructions.getSize(); i++){
-            writer.println(instructions.get(i).getRawLine());
+        } else {
+            newFile.createNewFile();
         }
 
-        this.hasUnsavedChanges = false;
-        writer.close();
+        try(PrintWriter writer = new PrintWriter(newFile)) {
+            for (int i = 0; i < instructions.getSize(); i++) {
+                writer.println(instructions.get(i).getRawLine());
+            }
+
+            this.hasUnsavedChanges = false;
+        }
     }
 
     // Poderia reestruturar esse método para retornar o índice de uma vez.
     // Pensando em desempenho e redundância aqui
     public boolean containsLine(int lineNumber){
         return lineNumberToIdx(lineNumber) != 1;
+    }
+
+    public boolean isCodeEmpty(){
+        return instructions.isEmpty();
     }
 
     public String getFileName() {
