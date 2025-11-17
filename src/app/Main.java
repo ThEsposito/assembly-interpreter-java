@@ -84,18 +84,41 @@ public class Main {
                         }// Tratar cada erro individualmente aqui! Registrador indefinido, por exemplo.
                         break;
 
-                    case "INS": // DEPOIS EU FAÇO! MUCHO TRAMPO
-                        // O método já cuida das linhas duplicadas
-//                        if(command.length )
-//                        repl.insert(line);
-                        break;
+                    case "INS":
+                        if(command.length < 4) {
+                            System.out.println("Error: Incorrect number of arguments for LOAD!");
+                            continue;
+                        }
+                        if(!repl.isFileOpen()) {
+                            System.out.println("Error: There's no file open! Type 'LOAD <path>' to select one.");
+                            continue;
+                        }
 
+                        try {
+                            int newLineNumber = Integer.parseInt(command[1]);
+                            boolean containsNewLine = repl.containsLine(newLineNumber);
+                            repl.insert(line);
+                            if(containsNewLine){
+                                System.out.println("Line " + newLineNumber + " updated successfully!");
+                            } else {
+                                System.out.println("Line " + newLineNumber + " inserted successfully!");
+                            }
+                        } catch (ParseException pe) {
+                            System.out.println("Error: "+ pe.getMessage());
+                        } catch (NumberFormatException nfe){
+                            System.out.println("Error: Malformed line! Must start with a number: "+command[1]);
+                        }
+
+                        break;
                     case "DEL":
                         try {
                             if (command.length == 2) {
                                 int deletionLine = Integer.parseInt(command[1]);
-                                repl.delete(deletionLine);
-                                System.out.println("Line " + line + " removed.");
+                                if(repl.delete(deletionLine)) {
+                                    System.out.println("Line " + line + " removed.");
+                                } else {
+                                    System.out.println("Line " + line + " not found.");
+                                }
 
                             } else if (command.length == 3) {
                                 int start = Integer.parseInt(command[1]);
