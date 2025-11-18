@@ -1,6 +1,7 @@
 package app;
 
 import datastructures.OrderedLL;
+import exceptions.InterpreterException;
 import exceptions.ParseException;
 import exceptions.UndefinedRegisterException;
 
@@ -68,11 +69,9 @@ public class Repl {
     // Exceção se a lista estiver vazia.
     // Exceção se a instrução for desconhecida (isso a classe instruction pode lançar)
     // Exceção se não houver arquivo aberto
-//    public void run() throws UndefinedRegisterException, IOException {
-//        if (instructions.isEmpty()) throw new IOException("Empty file!");
-//
-//        interpreter.execute(this.instructions); // Tratar exceções?? Ou só delego isso pra main?
-//    }
+    public void run() throws InterpreterException {
+        interpreter.execute(this.instructions); // Tratar exceções?? Ou só delego isso pra main?
+    }
 
     // CUIDADO AO INSERIR NUMERO DE LINHA QUE JA EXISTE!!!!
     // VOCE VAI ESQUECER DE MUDAR O ATRIBUTO LINENUMBER, FICANDO COM DOIS ELEMENTOS NA MESMA LINHA!

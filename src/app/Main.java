@@ -61,28 +61,28 @@ public class Main {
                     }
                     break;
 
-//                case "RUN":
-//                    if(command.length > 1) {
-//                        System.out.println("Error: No argument is required for RUN!");
-//                        continue;
-//                    }
-//                    if(!repl.isFileOpen()){
-//                        System.out.println("Error: There's no file open! Type 'LOAD <path>' to select one."); // Meu inglês é básico
-//                        continue;
-//                    }
-//
-//                    if(repl.isCodeEmpty()){
-//                        System.out.println("Empty source code! There's nothing to run.");
-//                        continue;
-//                    }
-//
-//                    try {
-//                        repl.run(); // Todas as validações serão feitas pelo interpretador
-//                    } catch(Exception e){
-//                        System.out.println("Error: "+e.getMessage());
-//                    }// Tratar cada erro individualmente aqui! Registrador indefinido, por exemplo.
-//                    break;
-//
+                case "RUN":
+                    if(command.length > 1) {
+                        System.out.println("Error: No argument is required for RUN!");
+                        continue;
+                    }
+                    if(!repl.isFileOpen()){
+                        System.out.println("Error: There's no file open! Type 'LOAD <path>' to select one."); // Meu inglês é básico
+                        continue;
+                    }
+
+                    if(repl.isCodeEmpty()){
+                        System.out.println("Empty source code! There's nothing to run.");
+                        continue;
+                    }
+
+                    try {
+                        repl.run(); // Todas as validações serão feitas pelo interpretador
+                    } catch(Exception e){
+                        System.out.println("Error: "+e.getMessage());
+                    }// Tratar cada erro individualmente aqui! Registrador indefinido, por exemplo.
+                    break;
+
                 case "INS":
                     if(command.length < 4) {
                         System.out.println("Error: Incorrect number of arguments for LOAD!");

@@ -39,7 +39,7 @@ public class Interpreter{
                 throw new UndefinedRegisterException("Register "+instr.getArg1() + " is undefined!");
 
             switch(instr.getOpcode().toUpperCase()){
-                case "MOVE":
+                case "MOV":
                     executeMov(regs, instr);
                     break;
                 case "INC":
