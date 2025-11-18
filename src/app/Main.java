@@ -162,6 +162,19 @@ public class Main {
                     }
                     break;
                 case "EXIT":
+                    if(repl.isFileOpen() && repl.hasUnsavedChanges()) {
+                        System.out.println("File '"+repl.getFileName()+"' is open!\n Do you want to save before exit? [Y/n]\n> ");
+                        String answer = sc.nextLine().trim().toUpperCase();
+                        if(answer.startsWith("Y")) {
+                            try {
+                                repl.save();
+                                System.out.println("File " + repl.getFileName() + " saved successfully!");
+                            } catch (IOException ioe){
+                                System.out.println("An error occurred while opening the file: "+ioe.getMessage());
+                                continue;
+                            }
+                        }
+                    }
                     break;
                 default:
                     System.out.println("Error: Invalid Command!");
