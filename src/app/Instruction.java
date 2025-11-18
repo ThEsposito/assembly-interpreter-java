@@ -6,16 +6,17 @@ public class Instruction implements Comparable<Instruction> {
     private final String opcode;
     private final String arg1; // Mantive como string porque poderia ser um char(A-Z) ou um número imediato
     private final String arg2;
-    private final String arg3; // Para possíveis linhas erradas
+    private final String trash; // Usado para determinar linhas inválidas
+    // Escolhemos essa abordagem porque, como o projeto é também um "editor de código", os erros também
+    // ser mapeados para a lista (permitindo futuras alterações) e lançados somente durante a execução
 
-    // Sobrecarreguei o construtor porque algumas instruções podem ter só 1 argumento
-    public Instruction(String rawLine, int lineNumber, String opcode, String arg1, String arg2, String arg3) {
+    public Instruction(String rawLine, int lineNumber, String opcode, String arg1, String arg2, String trash) {
         this.rawLine = rawLine;
         this.lineNumber = lineNumber;
         this.opcode = opcode;
         this.arg1 = arg1;
         this.arg2 = arg2;
-        this.arg3 = arg3;
+        this.trash = trash;
     }
 
     public int compareTo(Instruction other){
@@ -46,7 +47,7 @@ public class Instruction implements Comparable<Instruction> {
         return arg2;
     }
 
-    public String getArg3() {
-        return arg3;
+    public String getTrash() {
+        return trash;
     }
 }
