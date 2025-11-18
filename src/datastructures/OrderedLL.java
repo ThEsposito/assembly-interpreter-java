@@ -1,6 +1,5 @@
 package datastructures;
 
-// OBS: não devem ser permitidas linhas com número de linha igual
 public class OrderedLL<T extends Comparable<T>> {
     private Node<T> head;
     private int size;
@@ -154,10 +153,8 @@ public class OrderedLL<T extends Comparable<T>> {
         size -= (end - start + 1);
     }
 
-
-    // Era pra ser por índice ksksksksksksksks
-    public void removeRange(T elem1, T elem2){ // CONFERIR SE ESTA CERTO
-        if(head == null) return; // lista vazia
+    public void removeRange(T elem1, T elem2) throws Exception {
+        if(isEmpty()) throw new Exception("Empty List! There's no element to remove.");
 
         Node<T> current = head;
         Node<T> start = null; // achar o elemento de start
@@ -171,14 +168,14 @@ public class OrderedLL<T extends Comparable<T>> {
             }
         }
         // se não encontrou o primeiro, sai
-        if (start == null) return;
+        if (start == null) throw new Exception("Start not found: "+elem1);
 
         end = start;
         while(end != null && !end.getData().equals(elem2)){
             end = end.getNext();
         }
         // se não encontrou o segundo, sai
-        if (end == null) return;
+        if (end == null) throw new Exception("End not found: "+elem2);
 
         // agora temos: start (início da remoção), end (fim da remoção)
         // precisamos achar o nó anterior ao start

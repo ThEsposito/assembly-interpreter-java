@@ -110,12 +110,16 @@ public class Repl {
     public OrderedLL<Integer> delete(int startLine, int endLine) throws Exception {
         if(startLine > endLine) throw new Exception("Invalid range: "+startLine+ " to "+endLine);
 
-        int startIdx = Util.lineNumberToIdx(startLine, instructions);
-        int endIdx = Util.lineNumberToIdx(endLine, instructions);
+//        int startIdx = Util.lineNumberToIdx(startLine, instructions);
+//        int endIdx = Util.lineNumberToIdx(endLine, instructions);
 
-        if(startIdx == -1) throw new Exception("Line "+startLine+" unexists");
-        if(endIdx == -1) throw new Exception("Line "+endLine+" unexists");
+        Instruction startMark = new Instruction(null, startLine, null, null, null, null);
+        Instruction endMark = new Instruction(null, endLine, null, null, null, null);
 
+//        if(startIdx == -1) throw new Exception("Line "+startLine+" unexists");
+//        if(endIdx == -1) throw new Exception("Line "+endLine+" unexists");
+
+        instructions.removeRange(startMark, endMark);
         OrderedLL<Integer> LineDeletions = new OrderedLL<>();
         for(int i=startIdx; i<=endIdx; i++){
             LineDeletions.insert(instructions.get(i).getLineNumber());
