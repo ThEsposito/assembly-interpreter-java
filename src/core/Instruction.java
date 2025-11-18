@@ -51,4 +51,9 @@ public class Instruction implements Comparable<Instruction> {
     public String getTrash() {
         return trash;
     }
+
+    @Override
+    public String toString() {
+        return this.getRawLine();
+    }
 }

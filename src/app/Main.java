@@ -12,7 +12,6 @@ public class Main {
         Repl repl = new Repl();
         Scanner sc = new Scanner(System.in);
 
-        int lineNumber; // Alguns comandos vão usar. Acho melhor do que precisar reinicializar a variavel toda vez
         do {
             System.out.print("> ");
             String line = sc.nextLine().trim().replaceAll("\\s+", " ");
@@ -32,6 +31,7 @@ public class Main {
                         if(answer.startsWith("Y")) {
                             try {
                                 repl.save();
+                                System.out.println("File " + repl.getFileName() + " saved successfully!");
                             } catch (IOException ioe){
                                 System.out.println("An error occurred while opening the file: "+ioe.getMessage());
                             }
@@ -39,6 +39,7 @@ public class Main {
                     }
                     try {
                         repl.load(command[1]);
+                        System.out.println("File " + repl.getFileName() + " loaded successfully!");
                     } catch(IOException ioe){
                         System.out.println("An error occurred while opening the file: "+ioe.getMessage());
                     } catch(ParseException pe){
@@ -85,7 +86,7 @@ public class Main {
 
                 case "INS":
                     if(command.length < 4) {
-                        System.out.println("Error: Incorrect number of arguments for LOAD!");
+                        System.out.println("Error: Incorrect number of arguments for INS!");
                         continue;
                     }
                     if(!repl.isFileOpen()) {
@@ -145,11 +146,17 @@ public class Main {
 
                 case "SAVE":
                     try {
-                        if (command.length == 1) repl.save();
-                        else if(command.length == 2) repl.save(command[1]);
+                        if (command.length == 1) {
+                            repl.save();
+                            System.out.println("File " + repl.getFileName() +" saved successfully!");
+                        }
+                        else if(command.length == 2) {
+                            repl.save(command[1]);
+                            System.out.println("File " + command[1] +" saved successfully!");
+                        }
                         else {
                             System.out.println("Error: Incorrect number of arguments for SAVE");
-                        }
+                        };
                     } catch(IOException ioe){
                         System.out.println("Error: "+ ioe.getMessage());
                     }
