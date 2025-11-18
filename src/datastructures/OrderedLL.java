@@ -33,8 +33,8 @@ public class OrderedLL<T extends Comparable<T>> {
         return current.getData();
     }
 
-    // INSERE ELEMENTO EM ORDEM CRESCENTE (PRONTO??)
-    public void insert(T element){ //pode chamar element de linha, instrucao sla? Melhor não, deixar o mais genérico possível
+    // INSERE ELEMENTO EM ORDEM CRESCENTE
+    public void insert(T element){
         Node<T> novo = new Node<>(element); // encapsulando o elemento para tratar como node
 
         if(isEmpty()){ // caso a lista esteja vazia ja incia com o novo elemento
