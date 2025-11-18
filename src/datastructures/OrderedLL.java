@@ -189,7 +189,7 @@ public class OrderedLL<T extends Comparable<T>> {
         // liga o anterior diretamente ao nó após o último
         if (anterior != null){
             anterior.setNext(end.getNext());
-        }else{
+        } else {
             head = end.getNext(); // se o primeiro nó removido era o head
         }
     }

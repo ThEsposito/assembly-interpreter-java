@@ -52,7 +52,10 @@ public class Repl {
         Scanner fileScanner = new Scanner(newFile);
         while(fileScanner.hasNext()){
             Instruction inst = InstructionParser.parse(fileScanner.nextLine());
-            // Avaliar também o tratamenmto/lançamento de exceções aqui
+
+            if(containsLine(inst.getLineNumber())){
+                this.delete(inst.getLineNumber());
+            }
             instructions.insert(inst);
         }
         fileScanner.close();
@@ -62,8 +65,14 @@ public class Repl {
     public void list()  {
         if(instructions.isEmpty()) return;
 
-        for(int i=0; i<instructions.getSize(); i++) {
-            System.out.println(instructions.get(i).getRawLine());
+        Scanner sc = new Scanner(System.in);
+        for(int i=1; i<=instructions.getSize(); i++) {
+            if(i % 21 == 0){
+                System.out.print("Press ANY KEY to continue or Q to quit: ");
+                char answer = sc.next().trim().toUpperCase().charAt(0);
+                if(answer == 'Q') break;
+            }
+            System.out.println(instructions.get(i-1).getRawLine());
         }
     }
 
@@ -109,17 +118,14 @@ public class Repl {
 
     public OrderedLL<Integer> delete(int startLine, int endLine) throws Exception {
         if(startLine > endLine) throw new Exception("Invalid range: "+startLine+ " to "+endLine);
-
+        if(startLine == endLine) delete(startLine);
         int startIdx = Util.lineNumberToIdx(startLine, instructions);
         int endIdx = Util.lineNumberToIdx(endLine, instructions);
-
-        Instruction startMark = new Instruction(null, startLine, null, null, null, null);
-        Instruction endMark = new Instruction(null, endLine, null, null, null, null);
 
         if(startIdx == -1) throw new Exception("Line "+startLine+" unexists");
         if(endIdx == -1) throw new Exception("Line "+endLine+" unexists");
 
-        instructions.removeRange(startMark, endMark);
+        instructions.removeRange(startIdx, endIdx);
         OrderedLL<Integer> LineDeletions = new OrderedLL<>();
         for(int i=startIdx; i<=endIdx; i++){
             LineDeletions.insert(instructions.get(i).getLineNumber());
