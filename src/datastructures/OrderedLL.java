@@ -177,6 +177,7 @@ public class OrderedLL<T extends Comparable<T>> {
         // se não encontrou o segundo, sai
         if (end == null) throw new Exception("End not found: "+elem2);
 
+
         // agora temos: start (início da remoção), end (fim da remoção)
         // precisamos achar o nó anterior ao start
         Node<T> anterior = null;
