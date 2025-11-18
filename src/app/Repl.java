@@ -20,7 +20,7 @@ public class Repl {
     private boolean hasUnsavedChanges;
     private File file;
 
-    public Repl() {
+    public Repl(){
         hasUnsavedChanges = false;
         file = null;
         interpreter = new Interpreter();
@@ -82,7 +82,7 @@ public class Repl {
         Instruction instr = InstructionParser.parse(rawLine);
 
         int idx = Util.lineNumberToIdx(instr.getLineNumber(), instructions);
-        if(idx != -1) {
+        if(idx != -1){
             instructions.removeAt(idx);
         }
 

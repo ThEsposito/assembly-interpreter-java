@@ -240,6 +240,7 @@ public class OrderedLL<T extends Comparable<T>> {
                 }
             } // volta para o comeco do while
         }
+
         if(pageCont > 0){
             System.out.println("...");
         }
