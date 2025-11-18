@@ -3,6 +3,18 @@ package app;
 import datastructures.OrderedLL;
 
 public class Interpreter{
+    public void executeMov(Registers regs, String arg1, String arg2){
+        int value;
+        
+        if(arg1 for registrador){
+            regs.attribute(arg1); // get valor ou get?
+        }else{
+            Integer.parseInt(arg1);
+        }
+        
+    }    
+
+
     public void execute(OrderedLL<Instruction> instructions){
         Registers regs = new Registers(); // Inicializa os registradores
 
