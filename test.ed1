@@ -1,3 +1,5 @@
 1 mov a 10
 2 dec a
 3 inc a
+9 mov b 5
+10 add a b
