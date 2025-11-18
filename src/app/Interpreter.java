@@ -38,56 +38,47 @@ public class Interpreter{
             if(!opcode.equals("MOV") && !regs.exists(instr.getArg1().charAt(0)))
                 throw new UndefinedRegisterException("Register "+instr.getArg1() + " is undefined!");
 
-            try{
+            switch(instr.getOpcode().toUpperCase()){
+                case "MOVE":
+                    executeMov(regs, instr);
+                    break;
+                case "INC":
+                    executeInc(regs, instr);
+                    break;
+                case "DEC":
+                    executeDec(regs, instr);
+                    break;
+                case "ADD":
+                    executeAdd(regs, instr);
+                    break;
+                case "SUB":
+                    executeSub(regs, instr);
+                    break;
+                case "MUL":
+                    executeMul(regs, instr);
+                    break;
+                case "DIV":
+                    executeDiv(regs, instr);
+                    break;
+                case "OUT":
+                    executeOut(regs, instr);
+                    break;
+                case "JNZ":
+                    // Este método deve:
+                    // 1. Verificar o valor de arg1 em 'regs'.
+                    // 2. Se NÃO for zero, ele deve encontrar o Nó da linha (arg2) na lista.
+                    // 3. Se encontrar, ele RETORNA esse Nó.
+                    // 4. Se for zero (ou não encontrar), ele retorna null (sem salto).
 
-                switch(instr.getOpcode().toUpperCase()){
-                    case "MOVE":
-                        executeMov(regs, instr);
-                        break;
-                    case "INC":
-                        executeInc(regs, instr);
-                        break;
-                    case "DEC":
-                        executeDec(regs, instr);
-                        break;
-                    case "ADD":
-                        executeAdd(regs, instr);
-                        break;
-                    case "SUB":
-                        executeSub(regs, instr);
-                        break;
-                    case "MUL":
-                        executeMul(regs, instr);
-                        break;
-                    case "DIV":
-                        executeDiv(regs, instr);
-                        break;
-                    case "OUT":
-                        executeOut(regs, instr);
-                        break;
-                    case "JNZ":
-                        // Este método deve:
-                        // 1. Verificar o valor de arg1 em 'regs'.
-                        // 2. Se NÃO for zero, ele deve encontrar o Nó da linha (arg2) na lista.
-                        // 3. Se encontrar, ele RETORNA esse Nó.
-                        // 4. Se for zero (ou não encontrar), ele retorna null (sem salto).
+                    int jumpTarget = executeJnz(regs, instr, instructions);
 
-                        // Nota: ele precisa da lista inteira 'instructions' para procurar a linha
-                        Node<Instruction> jumpTarget = executeJnz(regs, instr.getArg1(), instr.getArg2(), instructions);
+                    if (jumpTarget != -1) {
+                        i = jumpTarget - 1; // O ponteiro passa a apontar para a instrução anterior
+                    } // -1 porque o i será incrementado no fim do laço
 
-                        if (jumpTarget != null) {
-                            nextNode = jumpTarget; // Sobrescreve o próximo nó!
-                        }
-                        // Proposta do Theozão: procura o índice da linha Y. Depois, atribui i = arg2;
-                        // Se jumpTarget for null, ele não faz nada, e o loop
-                        // simplesmente usará o 'nextNode' padrão (current.getNext()).
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Unknown opcode: " + instr.getOpcode()); // operacao desconhecida
-                }
-            } catch(Exception e){
-                System.out.println("Error at line " + instr.getLineNumber()+": "+ e.getMessage());
-                return; // Encerra a execução ao encontrar um erro
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown opcode: " + instr.getOpcode()); // operacao desconhecida
             }
         }
 
@@ -152,5 +143,18 @@ public class Interpreter{
         if(instr.getArg2() != null)
             throw new InterpreterException("Incorrect number of arguments for OUT!: "+instr.getRawLine());
         System.out.println(regs.getValue(instr.getArg1().charAt(0)));
+    }
+
+    public int executeJnz(Registers regs, Instruction instr, OrderedLL<Instruction> instructions) throws InterpreterException {
+        char arg1 = instr.getArg1().charAt(0);
+        int arg2 = validateArg2(regs, instr);
+
+        if(regs.getValue(arg1) == 0) return -1;
+
+        int jumpTargetIdx = Util.lineNumberToIdx(arg2, instructions);
+        if(jumpTargetIdx == -1)
+            throw new InterpreterException("Line "+arg2+" doesn't exist! Invalid jump at: "+instr.getRawLine());
+
+        return jumpTargetIdx;
     }
 }

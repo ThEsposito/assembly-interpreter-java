@@ -1,5 +1,6 @@
 package app;
 
+// Poderia ser uma record
 public class Instruction implements Comparable<Instruction> {
     private final String rawLine;
     private final int lineNumber;
