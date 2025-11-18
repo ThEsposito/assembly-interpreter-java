@@ -1,4 +1,4 @@
-package app;
+package core;
 
 // Poderia ser uma record
 public class Instruction implements Comparable<Instruction> {

@@ -1,14 +1,8 @@
-package app;
+package core;
 
 import datastructures.OrderedLL;
 
 public class Util {
-    public static boolean isNumber(String s){
-        for(Character c : s.toCharArray()){
-            if(!Character.isDigit(c)) return false;
-        }
-        return true;
-    }
     public static int lineNumberToIdx(int lineNumber, OrderedLL<Instruction> instructions){
         if(instructions.isEmpty()) return -1;
 

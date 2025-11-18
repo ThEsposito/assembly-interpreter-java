@@ -1,11 +1,13 @@
 package app;
 
+import core.Instruction;
+import core.InstructionParser;
+import core.Interpreter;
+import core.Util;
 import datastructures.OrderedLL;
 import exceptions.InterpreterException;
 import exceptions.ParseException;
-import exceptions.UndefinedRegisterException;
 
-import javax.sound.sampled.Line;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -79,14 +81,10 @@ public class Repl {
     public void insert(String rawLine) throws ParseException {
         Instruction instr = InstructionParser.parse(rawLine);
 
-        int idx = lineNumberToIdx(instr.getLineNumber());
+        int idx = Util.lineNumberToIdx(instr.getLineNumber(), instructions);
         if(idx != -1) {
-            instructions.removeAt(idx); // Remove a linha antiga, impedindo a duplicidade de linhas
-//            System.out.println("Line " + instr.getLineNumber() + " updated successfully!");
+            instructions.removeAt(idx);
         }
-//        } else {
-//            System.out.println("Line "+ instr.getLineNumber() + " inserted successfully!");
-//        }
 
         instructions.insert(instr);
         this.hasUnsavedChanges = true;
@@ -112,8 +110,8 @@ public class Repl {
     public OrderedLL<Integer> delete(int startLine, int endLine) throws Exception {
         if(startLine > endLine) throw new Exception("Invalid range: "+startLine+ " to "+endLine);
 
-        int startIdx = lineNumberToIdx(startLine);
-        int endIdx = lineNumberToIdx(endLine);
+        int startIdx = Util.lineNumberToIdx(startLine, instructions);
+        int endIdx = Util.lineNumberToIdx(endLine, instructions);
 
         if(startIdx == -1) throw new Exception("Line "+startLine+" unexists");
         if(endIdx == -1) throw new Exception("Line "+endLine+" unexists");
@@ -162,12 +160,6 @@ public class Repl {
         }
     }
 
-    // Poderia reestruturar esse método para retornar o índice de uma vez.
-    // Pensando em desempenho e redundância aqui
-    public boolean containsLine(int lineNumber){
-        return lineNumberToIdx(lineNumber) != -1;
-    }
-
     public boolean isCodeEmpty(){
         return instructions.isEmpty();
     }
@@ -177,12 +169,4 @@ public class Repl {
         return null; // Achar uma exceção para lançar aqui, ao invés de retornar nulo
     }
 
-    private int lineNumberToIdx(int lineNumber){
-        if(instructions.isEmpty()) return -1;
-
-        for(int i=0; i<instructions.getSize(); i++){
-            if(instructions.get(i).getLineNumber() == lineNumber) return i;
-        }
-        return -1;
-    }
 }

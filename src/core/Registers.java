@@ -4,7 +4,7 @@ Theo Espósito Simões Resende  RA: 10721356
 Kauê Lima Rodrigues Meneses RA: 10410594
 */
 
-package app;
+package core;
 
 import exceptions.UndefinedRegisterException;
 

@@ -1,4 +1,4 @@
-package app;
+package core;
 
 import datastructures.Node;
 import datastructures.OrderedLL;
@@ -15,7 +15,7 @@ public class Interpreter{
             if(!regs.exists(instr.getArg2().charAt(0)))
                 throw new InterpreterException("Register "+instr.getArg2() + " is undefined!: "+instr.getRawLine());
             arg2 = regs.getValue(instr.getArg2().charAt(0));
-        } else if(Util.isNumber(instr.getArg2())){
+        } else if(isNumber(instr.getArg2())){
             arg2 = Integer.parseInt(instr.getArg2());
         } else throw new InterpreterException("Unknow arg2 format for: "+instr.getRawLine());
 
@@ -156,5 +156,12 @@ public class Interpreter{
             throw new InterpreterException("Line "+arg2+" doesn't exist! Invalid jump at: "+instr.getRawLine());
 
         return jumpTargetIdx;
+    }
+
+    private static boolean isNumber(String s){
+        for(Character c : s.toCharArray()){
+            if(!Character.isDigit(c)) return false;
+        }
+        return true;
     }
 }
