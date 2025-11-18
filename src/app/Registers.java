@@ -15,17 +15,17 @@ public class Registers {
         values = new Integer[26];
     }
 
-    public void attribute(char var, int valor) throws IllegalArgumentException {
-        int idx = this.getIndex(var);
+    public void attribute(char reg, int value) throws IllegalArgumentException {
+        int idx = this.getIndex(reg);
 
-        this.values[idx] = valor;
+        this.values[idx] = value;
     }
 
     public void clear(){
         values = new Integer[26];
     }
     
-    public int getValor(char var) throws IllegalArgumentException, UndefinedRegisterException {
+    public int getValue(char var) throws IllegalArgumentException, UndefinedRegisterException {
         int idx = this.getIndex(var);
         if(values[idx] == null) {
             char[] alfabeto = {'A','B','C','D','E','F','G','H','I','J','K','L',
@@ -35,7 +35,7 @@ public class Registers {
         return this.values[idx];
     }
 
-    public boolean existe(char var) throws IllegalArgumentException {
+    public boolean exists(char var) throws IllegalArgumentException {
         int idx = this.getIndex(var);
 
         // Como é um vetor de Double (um wrapper) os valores são inicializados como null
@@ -78,5 +78,9 @@ public class Registers {
             if (v != null) return false;
         }
         return true;
+    }
+
+    public static boolean isRegister(String s){
+        return (s.length() == 1 && Character.isAlphabetic(s.charAt(0)));
     }
 }
